@@ -33,6 +33,12 @@
 #include "mdss_debug.h"
 #include "mdss_livedisplay.h"
 
+#ifdef CONFIG_MACH_OPPO
+#include <soc/oppo/oppo_project.h>
+extern void opchg_check_lcd_on(void);
+extern void opchg_check_lcd_off(void);
+#endif
+
 #define XO_CLK_RATE	19200000
 #ifdef CONFIG_MACH_WT86518
 bool is_Lcm_Present = false;//heming@wingtech.com,20140730, disable lcm backlight when lcm is not connected
@@ -505,6 +511,13 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 		return -EINVAL;
 	}
 
+#ifdef CONFIG_MACH_OPPO
+/*Add for pass screen off current value*/
+	if (is_project(OPPO_15399)) 
+{
+	opchg_check_lcd_off();
+	}
+#endif
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
@@ -594,6 +607,13 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+#ifdef CONFIG_MACH_OPPO
+/*Add for pass screen on current value*/
+	if (is_project(OPPO_15399)) 
+{
+	opchg_check_lcd_on();
+	}
+#endif
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
